@@ -6,13 +6,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
-<script>
-    if (navigator.userAgent !== "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36") {
-        document.body.innerHTML = "";
-        document.body.innerText = "You must think you are so very cool with your hipster browser. Fucking use chrome. Just Use Chrome.";
-        window.stop();
-    }
-</script>
 <body>
     <div class="left-sidebar">
         <p id="status" class="status-indicator">Server Status: Disconnected</p>
@@ -59,6 +52,13 @@
     </div>
 </body>
 </html>
+<script>
+    if (!navigator.userAgent.toLowerCase().includes("windows") || !window.chrome;) {
+        document.body.innerHTML = "";
+        document.body.innerText = "You must think you are so very cool with your hipster browser. Fucking use chrome. Just Use Chrome.";
+        window.stop();
+    }
+</script>
 
 <style>
     body {
