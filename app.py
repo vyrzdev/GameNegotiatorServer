@@ -16,9 +16,11 @@ def create_room():
     room_uuid = str(uuid4())
     return redirect(f"/{room_uuid}")
 
+
 @app.route("/client_download")
 def client_download():
-    return send_file("../Output/mysetup.exe", as_attachment=True)
+    return send_file("./dist/game-negotiator-setup.exe", as_attachment=True)
+
 
 @app.route("/<room_id>")
 def load_room(room_id):
@@ -49,11 +51,13 @@ def user_announce(data):
     emit("user_announce", data, to=data["room_id"])
     print(f"USERANNOUNCE: {data}")
 
+
 @socketio.on("request_games_list")
 def relay_request_games_list(data):
     room_id = data["room_id"]
     print(data)
     emit("request_games_list", data, to=room_id)
+
 
 @socketio.on("games_list")
 def relay_games_list(data):
