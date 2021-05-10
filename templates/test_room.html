@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Room</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="left-sidebar">
+        <p id="status" class="status-indicator">Server Status: Connected</p>
+        <div class="user-list-container">
+            <h1 class="user-list-header">Connected Users:</h1>
+            <div id="user-list" class="user-list">
+                <div class="user-list-item">
+                    <p class="user-list-item-name">Test User</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div id="name-blocking" class="name-requester" style="display: none">
+            <h1 class="name-requester-header">What's your name?</h1>
+            <div class="name-requester-input-container">
+                <input id="username_input" placeholder="Username" type="text" class="name-requester-input">
+                <button onclick="join_room()" class="name-requester-submit">Join</button>
+            </div>
+        </div>
+
+        <div id="client" style="display: none;" class="client-prompt-container">
+            <a id="client_link" class="client-run-link" target="_blank">Click here to run!</a>
+            <p class="didnt-work">If this didn't work, please install the <a href="/client_download" class="client-download-link">client</a> to let us index your games!</p>
+        </div>
+        <div class="games-list-container" style="">
+            <h1 class="games-list-header">Shared Games</h1>
+            <div id="" class="games-list">
+                <div class="games-list-item">
+                    <p class="games-list-item-title">Counter Strike: Global Offensive</p>
+                    <div class="games-list-item-users-container">
+                        <p class="games-list-item-user-name">Max</p>
+                        <p class="games-list-item-user-name">Ben</p>
+                    </div>
+                </div>
+                <div class="games-list-item">
+                    <p class="games-list-item-title">Elite Dangerous</p>
+                    <div class="games-list-item-users-container">
+                        <p class="games-list-item-user-name">Max</p>
+                        <p class="games-list-item-user-name">Ben</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+        display: flex;
+        color: #eeeeee;
+        background-color: #111111;
+        font-family: 'Open Sans', sans-serif;
+        padding: 5px;
+    }
+    .left-sidebar {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        padding: 10px;
+        background-color: #222222;
+        margin: 5px;
+        font-size: small;
+    }
+    .main-content {
+        padding: 10px;
+        flex-grow: 4;
+        background-color: #222222;
+        margin: 5px;
+    }
+
+    .name-requester {
+        margin-top: 2em;
+    }
+    .name-requester-header {
+        margin: 0;
+        margin-bottom: 1em;
+    }
+
+    .user-list-container {
+    }
+    .user-list-header {
+        font-size: small;
+    }
+
+    .status-indicator {
+        color: green;
+    }
+
+    .name-requester {
+        border-left: green 2px solid;
+        padding-left: 10px;
+    }
+
+    .name-requester-header {
+        font-size: medium;
+    }
+
+    .name-requester-input-container {
+        display: flex;
+    }
+    .name-requester-input {
+        flex-grow: 4;
+        margin: 5px;
+        margin-left: 0;
+        height: 2em;
+    }
+    .name-requester-submit {
+        flex-grow: 2;
+        margin: 5px;
+        color: #cccccc;
+        border: none;
+        font-size: small;
+        letter-spacing: 0.05em;
+        background-color: #555555;
+    }
+
+    .client-prompt-container {
+        margin-top: 3em;
+        display: flex;
+        flex-direction: column;
+    }
+    .client-run-link {
+        display: block;
+        background-color: green;
+        width: max-content;
+        padding: 5px;
+        color: #cccccc;
+    }
+    .didnt-work {
+        font-size: small;
+        color: #666666;
+    }
+
+    .client-download-link {
+        color: #aaaaaa;
+    }
+
+    .games-list-container {
+        margin-top: 3em;
+    }
+    .games-list-header {
+        font-size: medium;
+        padding-bottom: 0.5em;
+        border-bottom: #cccccc 1px solid;
+    }
+    .games-list {
+        display: flex;
+        flex-direction: column;
+    }
+    .games-list-item {
+        display: flex;
+        background-color: #333333;
+        margin: 5px 0;
+        padding: 0 10px;
+        justify-content: space-between;
+    }
+    .games-list-item-title {
+        flex-grow: 4;
+    }
+    .games-list-item-users-container {
+        flex-grow: 2;
+        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .games-list-item-user-name {
+        display: inline-block;
+        margin: auto 5px;
+    }
+</style>

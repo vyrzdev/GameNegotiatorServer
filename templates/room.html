@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Room</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="left-sidebar">
+        <p id="status" class="status-indicator">Server Status: Disconnected</p>
+        <div class="user-list-container">
+            <h1 class="user-list-header">Connected Users:</h1>
+            <div id="user-list" class="user-list">
+                <div class="user-list-item">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div id="name-blocking" class="name-requester" style="">
+            <h1 class="name-requester-header">What's your name?</h1>
+            <div class="name-requester-input-container">
+                <input id="username_input" placeholder="Username" type="text" class="name-requester-input" maxlength="22">
+                <button onclick="join_room()" class="name-requester-submit">Join</button>
+            </div>
+        </div>
+
+        <div id="client" style="display: none;" class="client-prompt-container">
+            <a id="client_link" class="client-run-link" target="_blank">Click here to run!</a>
+            <p class="didnt-work">If this didn't work, please install the <a href="/client_download" class="client-download-link">client</a> to let us index your games!</p>
+        </div>
+        <div id="games-list-container" class="games-list-container" style="display: none;">
+            <h1 class="games-list-header">Shared Games</h1>
+            <div id="games-list" class="games-list">
+                <div class="games-list-item">
+                    <p class="games-list-item-title">Counter Strike: Global Offensive</p>
+                    <div class="games-list-item-users-container">
+                        <p class="games-list-item-user-name">Max</p>
+                        <p class="games-list-item-user-name">Ben</p>
+                    </div>
+                </div>
+                <div class="games-list-item">
+                    <p class="games-list-item-title">Elite Dangerous</p>
+                    <div class="games-list-item-users-container">
+                        <p class="games-list-item-user-name">Max</p>
+                        <p class="games-list-item-user-name">Ben</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+        display: flex;
+        color: #eeeeee;
+        background-color: #111111;
+        font-family: 'Open Sans', sans-serif;
+        padding: 5px;
+    }
+    .left-sidebar {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        padding: 10px;
+        background-color: #222222;
+        margin: 5px;
+        font-size: small;
+    }
+    .main-content {
+        padding: 10px;
+        flex-grow: 4;
+        background-color: #222222;
+        margin: 5px;
+    }
+
+    .name-requester {
+        margin-top: 2em;
+    }
+    .name-requester-header {
+        margin: 0;
+        margin-bottom: 1em;
+    }
+
+    .user-list-container {
+    }
+    .user-list-header {
+        font-size: small;
+    }
+
+    .status-indicator {
+        color: red;
+    }
+
+    .name-requester {
+        border-left: green 2px solid;
+        padding-left: 10px;
+    }
+
+    .name-requester-header {
+        font-size: medium;
+    }
+
+    .name-requester-input-container {
+        display: flex;
+    }
+    .name-requester-input {
+        flex-grow: 4;
+        margin: 5px;
+        margin-left: 0;
+        height: 2em;
+    }
+    .name-requester-submit {
+        flex-grow: 2;
+        margin: 5px;
+        color: #cccccc;
+        border: none;
+        font-size: small;
+        letter-spacing: 0.05em;
+        background-color: #555555;
+    }
+
+    .client-prompt-container {
+        margin-top: 3em;
+        display: flex;
+        flex-direction: column;
+    }
+    .client-run-link {
+        display: block;
+        background-color: green;
+        width: max-content;
+        padding: 5px;
+        color: #cccccc;
+    }
+    .didnt-work {
+        font-size: small;
+        color: #666666;
+    }
+
+    .client-download-link {
+        color: #aaaaaa;
+    }
+
+    .games-list-container {
+        margin-top: 3em;
+        overflow-y: auto;
+    }
+    .games-list-header {
+        font-size: medium;
+        padding-bottom: 0.5em;
+        border-bottom: #cccccc 1px solid;
+    }
+    .games-list {
+        display: flex;
+        flex-direction: column;
+    }
+    .games-list-item {
+        display: flex;
+        background-color: #333333;
+        margin: 5px 0;
+        padding: 0 10px;
+        justify-content: space-between;
+    }
+    .games-list-item-title {
+        flex-grow: 4;
+    }
+    .games-list-item-users-container {
+        flex-grow: 2;
+        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .games-list-item-user-name {
+        display: inline-block;
+        margin: auto 5px;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var ID = function () {
+        // Math.random should be unique because of its seeding algorithm.
+        // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+        // after the decimal.
+        return Math.random().toString(8).substr(2, 9);
+    };
+    let name = ID()
+    let connected_users = Array()
+    let games_list = null
+    let first_in_room = true
+    let games_list_v2 = {}
+    document.getElementById("username_input").value = name
+    var socket = io();
+    socket.on('connect', function() {
+        document.getElementById("status").textContent = "Server Status: Connected"
+        document.getElementById("status").style = "color: green;"
+    });
+
+    function join_room() {
+        name = document.getElementById("username_input").value
+        socket.emit("join_room", {
+            room_id: "{{room_id}}",
+            name: document.getElementById("username_input").value
+        })
+        setTimeout(initialise_games_list, 500)
+    }
+
+    socket.on("user_connected", function(data) {
+        if (data.name === name) {
+            document.getElementById("name-blocking").style = "display: none;"
+            document.getElementById("client").style = "";
+            document.getElementById("client_link").href = `game-negotiator://{{room_id}}/${name}`;
+            addUserToUserList(data)
+            socket.emit("user_announce", {
+                name: name,
+                room_id: "{{room_id}}"
+            })
+        } else {
+            socket.emit("user_announce", {
+                name: name,
+                room_id: "{{room_id}}"
+            })
+
+        }
+    })
+    function addUserToUserList(data) {
+        if (!connected_users.includes(data.name)) {
+            connected_users.push(data.name)
+            let user_list_item_node = document.createElement("div");
+            user_list_item_node.className = "user-list-item";
+            user_list_item_node.id = `user-list-item-${data.name}`;
+
+            let user_list_item_name_node = document.createElement("p");
+            user_list_item_name_node.innerText = data.name;
+            user_list_item_name_node.className = "user-list-item-name";
+
+            user_list_item_node.appendChild(user_list_item_name_node);
+            document.getElementById("user-list").appendChild(user_list_item_node)
+        }
+    }
+    socket.on("user_announce", function (data){
+        if (data.name !== name) {
+            first_in_room = false
+            addUserToUserList(data)
+        }
+    })
+
+    socket.on("reported_game_data", async function (data){
+        if (decodeURIComponent(data.user_name) === name) {
+            document.getElementById("client").style = "display: none;"
+            document.getElementById("games-list-container").style = ""
+        }
+        games_list[decodeURIComponent(data.user_name)] = data.games
+        games_list_v2 = await build_games_list()
+        display_shared_games_list()
+    })
+
+    socket.on("request_games_list", function (data){
+        if (data.name !== name) {
+        socket.emit("games_list", {
+            room_id: "{{room_id}}",
+            name: data.name,
+            games_list: games_list
+        })}
+    })
+
+    socket.on("games_list", async function (data) {
+        if ((data.name === name)&&(games_list === null)) {
+            games_list = data.games_list;
+            games_list_v2 = await build_games_list()
+            display_shared_games_list()
+        }
+    })
+
+    function initialise_games_list() {
+        if (first_in_room) {
+            console.log("First in room, creating base list!")
+            games_list = {}
+        } else {
+            console.log("Not first in room! Requesting list from peers!")
+            socket.emit("request_games_list", {
+                room_id: "{{room_id}}",
+                name: name,
+            })
+        }
+    }
+
+    async function build_games_list() {
+        games_list_v2 = {}
+        let game_occurences = {}
+        for (let [key, value] of Object.entries(games_list)) {
+            for (let game_object of value) {
+                if (game_occurences[game_object.app_id] === undefined) {
+                    game_occurences[game_object.app_id] = {
+                        occurences: 1,
+                        owned_by: [key],
+                        name: game_object.app_name
+                    }
+                } else {
+                    game_occurences[game_object.app_id].occurences += 1
+                    game_occurences[game_object.app_id].owned_by.push(key)
+                }
+            }
+        }
+        return game_occurences
+    }
+
+    function display_shared_games_list() {
+        document.getElementById("games-list").innerHTML = ""
+        for (let [game_id, game_object] of Object.entries(games_list_v2).sort((game_1, game_2) => {return game_2[1].occurences - game_1[1].occurences})) {
+            if (game_object.occurences > 1) {
+                let games_list_item = document.createElement("div");
+                games_list_item.className = "games-list-item";
+
+                let games_list_item_title = document.createElement("p");
+                games_list_item_title.className = "games-list-item-title"
+                games_list_item_title.textContent = game_object.name
+
+                games_list_item.appendChild(games_list_item_title);
+
+                let games_list_item_users_container = document.createElement("div")
+                games_list_item_users_container.className = "games-list-item-users-container"
+
+                for (let user of game_object.owned_by) {
+                    let games_list_item_user_name = document.createElement("p")
+                    games_list_item_user_name.className = "games-list-item-user-name"
+                    games_list_item_user_name.textContent = user
+
+                    games_list_item_users_container.appendChild(games_list_item_user_name)
+                }
+
+                games_list_item.appendChild(games_list_item_users_container)
+                document.getElementById("games-list").appendChild(games_list_item)
+            }
+        }
+    }
+</script>
