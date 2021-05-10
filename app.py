@@ -7,6 +7,7 @@ from json import loads
 app = Flask(__name__)
 app.config["SECRET_KEY"] = str(uuid4())
 socketio = SocketIO(app)
+socketio.init_app(app, cors_allowed_origins="*")
 
 
 
